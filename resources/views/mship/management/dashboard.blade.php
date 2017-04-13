@@ -126,6 +126,103 @@
                 </div>
             </div>
 
+            @if($_account->hasState("DIVISION") || $_account->hasState("TRANSFERRING"))
+                <div class="col-md-12">
+                    <div class="panel panel-ukblue">
+                        <div class="panel-heading"><i class="fa fa-cogs"></i>
+                            &thinsp;
+                            Community Groups
+                            @if($_account->can('deploy', new \App\Modules\Community\Models\Membership()))
+                            <div class="pull-right">
+                                    <a href="{{ route("community.membership.deploy") }}">
+                                        <i class="fa fa-plus-circle"></i>
+                                    </a>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p align="center">
+                                                <b>CURRENT MEMBERSHIP(S)</b>
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                          <table class="table">
+                                                @forelse($_account->communityGroups as $cg)
+                                                    <tr>
+                                                        <th>{{ $cg->name }}</th>
+                                                        <td>{{ HTML::fuzzyDate($cg->pivot->created_at) }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <th colspan="2">
+                                                            You are not part of any community groups.
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="2">
+                                                            {!! link_to_route("community.membership.deploy", "Why not join one now?") !!}
+                                                        </th>
+                                                    </tr>
+                                                @endforelse
+
+                                                @if($_account->communityGroups->count() == 1)
+                                                    <tr>
+                                                        <th colspan="2">
+                                                            You are not part of any <em>region</em>-based groups.
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="2">
+                                                            {!! link_to_route("community.membership.deploy", "Why not join one now?") !!}
+                                                        </th>
+                                                    </tr>
+                                                @endif
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p align="center">
+                                              <b>TOTAL POINTS</b>
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <table class="table">
+                                                <tr>
+                                                    <th>Weekly</th>
+                                                    <td>0</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Monthly</th>
+                                                    <td>0</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Yearly</th>
+                                                    <td>0</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="col-md-12">
                 <div class="panel panel-ukblue">
                     <div class="panel-heading"><i class="fa fa-graduation-cap"></i> &thinsp; ATC & Pilot Qualifications</div>
@@ -134,14 +231,12 @@
 
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-6 col-lg-6 col-md-12 row-text-contain text-center">
                                         <b>ATC QUALIFICATIONS</b>
                                         <br />
                                         <small>Showing all achieved</small>
                                     </div>
-
-                                    <div class="col-xs-8">
-
+                                    <div class="col-xs-6 col-lg-6 col-md-12 text-center">
                                         @foreach($_account->qualifications_atc as $qual)
                                             {{ $qual }}
                                             <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $qual->pivot->created_at }}">
@@ -167,28 +262,27 @@
 
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-6 col-lg-6 col-md-12 row-text-contain text-center">
                                         <b>PILOT QUALIFICATIONS</b>
                                         <br />
                                         <small>Showing all achieved</small>
                                     </div>
-
-                                    <div class="col-xs-8">
+                                    <div class="col-xs-6 col-lg-6 col-md-12 text-center">
 
                                         @foreach($_account->qualifications_pilot as $qual)
                                             {{ $qual }}
-                                            <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $qual->created_at }}">
+                                            <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $qual->pivot->created_at }}">
                                                 <em>granted {{ $qual->pivot->created_at->diffForHumans() }}</em>
                                             </a>
                                             <br />
                                         @endforeach
                                         @if(count($_account->qualifications_pilot) < 1)
-                                            You have no ATC ratings.
+                                            You have no Pilot ratings.
                                         @endif
 
                                         @foreach($_account->qualifications_pilot_training as $qual)
                                             {{ $qual }}
-                                            <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $qual->created_at }}">
+                                            <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $qual->pivot->created_at }}">
                                                 <em>granted {{ $qual->pivot->created_at }}</em>
                                             </a>
                                             <br />
@@ -248,7 +342,7 @@
                                 {{ $email->email }}
                             </div>
 
-                            <div class="col-xs-4">
+                            <div class="col-xs-2">
                                 <b>STATUS:</b>
                                 <br />
                                 @if($email->verified_at == null)
@@ -263,6 +357,11 @@
                                 <br />
                                 <a class="tooltip_displays" href="#" data-toggle="tooltip" title="{{ $email->created_at }}">
                                     <em>on {{ $email->created_at }}</em>
+                                </a>
+                            </div>
+                            <div class="col-xs-2">
+                                <a href="{{ route('mship.manage.email.delete', ['email' => $email->id]) }}">
+                                    <button type="button" class="btn btn-xs btn-danger">Delete</button>
                                 </a>
                             </div>
 
@@ -301,7 +400,7 @@
                                             No registrations found.
                                         @endif
                                         @foreach ($_account->teamspeakRegistrations as $tsreg)
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-6 row-text-contain">
                                                 [ <strong>Registration #{{ $tsreg->id }}</strong> ]<br />
                                                 <strong>CREATED</strong>:
 
@@ -336,7 +435,7 @@
                             &thinsp;
                             Slack Registration
                             <div class="pull-right">
-                                @if($_account->hasState("DIVISION"))
+                                @if(Gate::allows('register-slack'))
                                     <a href="{{ route("slack.new") }}">
                                         <i class="fa fa-plus-circle"></i>
                                     </a>
@@ -346,14 +445,12 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    @if($_account->hasState("DIVISION"))
-                                        @if($_account->slack_id)
-                                            Currently registered with Slack ID {{ $_account->slack_id }}.
-                                        @else
-                                            You are not yet registered.  {!! link_to_route("slack.new", "Click here to register.") !!}
-                                        @endif
+                                    @if($_account->slack_id)
+                                        Currently registered with Slack ID {{ $_account->slack_id }}.
+                                    @elseif(Gate::allows('register-slack'))
+                                        You are not yet registered.  {!! link_to_route("slack.new", "Click here to register.") !!}
                                     @else
-                                        You are not elegible for Slack registration as you are not a UK member.
+                                        You are not eligible for Slack registration.
                                     @endif
                                 </div>
                             </div>

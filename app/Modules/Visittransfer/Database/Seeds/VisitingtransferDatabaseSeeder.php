@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Visittransfer\Database\Seeds;
 
 use Illuminate\Database\Seeder;
@@ -14,7 +15,5 @@ class VisittransferDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call('App\Modules\Visittransfer\Database\Seeds\FoobarTableSeeder');
     }
 }

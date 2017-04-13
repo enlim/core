@@ -2,18 +2,17 @@
 
 namespace App\Jobs\Mship\Account;
 
-use App\Exceptions\Mship\DuplicateQualificationException;
-use App\Exceptions\Mship\DuplicateStateException;
-use App\Jobs\Job;
-use App\Models\Mship\Account;
-use App\Models\Mship\Qualification as QualificationData;
-use Carbon\Carbon;
 use DB;
-use Exception;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use VatsimXML;
+use App\Jobs\Job;
+use Carbon\Carbon;
+use App\Models\Mship\Account;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Exceptions\Mship\DuplicateStateException;
+use App\Models\Mship\Qualification as QualificationData;
+use App\Exceptions\Mship\DuplicateQualificationException;
 
 class MemberCertUpdate extends Job implements ShouldQueue
 {
@@ -66,7 +65,7 @@ class MemberCertUpdate extends Job implements ShouldQueue
             }
 
             $member->cert_checked_at = Carbon::now();
-            $member->is_inactive = (boolean)($this->data->rating < 0);
+            $member->is_inactive = (bool) ($this->data->rating < 0);
             $member->joined_at = $this->data->regdate;
             $member->save();
 
@@ -98,7 +97,6 @@ class MemberCertUpdate extends Job implements ShouldQueue
             $newBan->save();
 
             $member->bans()->save($newBan);
-            Account::find(VATSIM_ACCOUNT_SYSTEM)->bansAsInstigator($newBan);
         }
 
         // if their network ban has expired
@@ -137,7 +135,7 @@ class MemberCertUpdate extends Job implements ShouldQueue
             }
 
             // log their current rating (unless they're a non-UK instructor)
-            if (($this->data->rating != 8 && $this->data->rating != 9) || $member->hasState("DIVISION")
+            if (($this->data->rating != 8 && $this->data->rating != 9) || $member->hasState('DIVISION')
             ) {
                 $atcRating = QualificationData::parseVatsimATCQualification($this->data->rating);
                 if (!is_null($atcRating) && !$member->hasQualification($atcRating)) {

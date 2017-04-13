@@ -1,7 +1,9 @@
-<?php namespace App\Modules\Visittransfer\Providers;
+<?php
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+namespace App\Modules\Visittransfer\Providers;
+
 use Route;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -51,7 +53,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'web',
-            'namespace'  => $this->namespace,
+            'namespace' => $this->namespace,
         ], function ($router) {
             require module_path('visittransfer', 'Routes/web.php');
         });
@@ -68,8 +70,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'api',
-            'namespace'  => $this->namespace,
-            'prefix'     => 'api',
+            'namespace' => $this->namespace,
+            'prefix' => 'api',
         ], function ($router) {
             require module_path('visittransfer', 'Routes/api.php');
         });

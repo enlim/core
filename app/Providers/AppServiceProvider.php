@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use URL;
+use HTML;
+use Config;
 use Illuminate\Support\ServiceProvider;
-use \Form;
-use \HTML;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,19 +16,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!defined('VATUK_ACCOUNT_SYSTEM')) {
-            define('VATUK_ACCOUNT_SYSTEM', '707070');
+        if ($this->app->runningInConsole()) {
+            URL::forceRootUrl(env('APP_PROTOCOL', 'https').'://'.Config::get('app.url'));
         }
 
-        if (!defined('VATSIM_ACCOUNT_SYSTEM')) {
-            define('VATSIM_ACCOUNT_SYSTEM', '606060');
-        }
-
-        HTML::component("icon", "components.html.icon", ["type", "key"]);
-        HTML::component("img", "components.html.img", ["key", "ext" => "png", "width" => null, "height" => null, "alt" => null]);
-        HTML::component("panelOpen", "components.html.panel_open", ["title", "icon" => [], "attr" => []]);
-        HTML::component("panelClose", "components.html.panel_close", []);
-        HTML::component("fuzzyDate", "components.html.fuzzy_date", ["timestamp"]);
+        HTML::component('icon', 'components.html.icon', ['type', 'key']);
+        HTML::component('img', 'components.html.img', ['key', 'ext' => 'png', 'width' => null, 'height' => null, 'alt' => null]);
+        HTML::component('panelOpen', 'components.html.panel_open', ['title', 'icon' => [], 'attr' => []]);
+        HTML::component('panelClose', 'components.html.panel_close', []);
+        HTML::component('fuzzyDate', 'components.html.fuzzy_date', ['timestamp']);
     }
 
     /**
@@ -37,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->alias('bugsnag.multi', \Illuminate\Contracts\Logging\Log::class);
+        $this->app->alias('bugsnag.multi', \Psr\Log\LoggerInterface::class);
     }
 }

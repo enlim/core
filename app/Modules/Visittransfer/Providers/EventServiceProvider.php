@@ -1,6 +1,7 @@
-<?php namespace App\Modules\Visittransfer\Providers;
+<?php
 
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
+namespace App\Modules\Visittransfer\Providers;
+
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -39,7 +40,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         \App\Modules\Visittransfer\Events\ReferenceUnderReview::class => [
-            \App\Modules\Visittransfer\Listeners\NotifyRefereeOnReferenceCompletion::class,
+            \App\Modules\Visittransfer\Listeners\NotifyRefereeOfReferenceCompletion::class,
             \App\Modules\Visittransfer\Listeners\NotifyApplicantOfReferenceCompletion::class,
         ],
 

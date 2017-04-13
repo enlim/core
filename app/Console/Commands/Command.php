@@ -28,9 +28,6 @@ class Command extends BaseCommand
             }
         }
 
-        // Add artisan command name to output
-        $message = $newline ? $this->getName() . " - " . $message : $message;
-
         // add style tags to the output string
         $styled = $style ? "<$style>$message</$style>" : $message;
 
@@ -77,13 +74,13 @@ class Command extends BaseCommand
         $slack->send($message);
     }
 
-    protected function sendSlackMessageFormatted($to, $pretext, $message, $colour = "danger", $fields = [], $from = null)
+    protected function sendSlackMessageFormatted($to, $pretext, $message, $colour = 'danger', $fields = [], $from = null)
     {
         $attachment = [
-            'pretext'     => '@here: '.$pretext,
-            'fallback'    => $message,
-            'author_name' => "VATSIM UK Slack Bot",
-            'color'       => $colour,
+            'pretext' => '@here: '.$pretext,
+            'fallback' => $message,
+            'author_name' => 'VATSIM UK Slack Bot',
+            'color' => $colour,
         ];
 
         $attachment['author_link'] = $this->getAuthorLink();
@@ -115,11 +112,11 @@ class Command extends BaseCommand
     {
         // define the message/attachment to send
         $attachment = [
-            'pretext'     => '@here: An error has occurred:',
-            'fallback'    => $message,
+            'pretext' => '@here: An error has occurred:',
+            'fallback' => $message,
             'author_name' => get_class($this),
-            'color'       => 'danger',
-            'fields'      => [
+            'color' => 'danger',
+            'fields' => [
                 [
                     'title' => 'Command name:',
                     'value' => (new \ReflectionClass($this))->getShortName(),
@@ -159,11 +156,14 @@ class Command extends BaseCommand
      */
     protected function sendSlackSuccess($message = 'Command has run successfully.', $fields = [])
     {
+        if ($this->getOutput()->getVerbosity() < OutputInterface::VERBOSITY_VERBOSE) {
+            return false;
+        }
         $attachment = [
-            'fallback'    => $message,
+            'fallback' => $message,
             'author_name' => get_class($this),
-            'color'       => 'good',
-            'fields'      => [
+            'color' => 'good',
+            'fields' => [
                 [
                     'title' => 'Command name:',
                     'value' => (new \ReflectionClass($this))->getShortName(),
@@ -199,11 +199,11 @@ class Command extends BaseCommand
     {
         // get the current relative directory, and set the link to GitLab
         preg_match('/\/app\/Console\/Commands\/.*$/', __FILE__, $directory);
-        $directory = array_get($directory, 0, "");
+        $directory = array_get($directory, 0, '');
         if (App::environment('production')) {
-            return 'https://gitlab.com/vatsim-uk/core/blob/production' . $directory;
+            return 'https://gitlab.com/vatsim-uk/core/blob/production'.$directory;
         } else {
-            return 'https://gitlab.com/vatsim-uk/core/blob/development' . $directory;
+            return 'https://gitlab.com/vatsim-uk/core/blob/development'.$directory;
         }
     }
 }

@@ -2,44 +2,42 @@
 
 namespace App\Models\Mship;
 
-use App\Models\Mship\Account;
 use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes as SoftDeletingTrait;
-use Carbon\Carbon;
 
 /**
  * App\Models\Mship\Qualification
  *
- * @property integer $id
+ * @property int $id
  * @property string $code
  * @property string $type
  * @property string $name_small
  * @property string $name_long
  * @property string $name_grp
- * @property integer $vatsim
+ * @property int $vatsim
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mship\Account[] $account
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereCode($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereType($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameSmall($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameLong($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameGrp($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereVatsim($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification ofType($type)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification networkValue($networkValue)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification ofType($type)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereCode($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameGrp($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameLong($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereNameSmall($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereType($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Qualification whereVatsim($value)
  * @mixin \Eloquent
  */
 class Qualification extends \Eloquent
 {
     use SoftDeletingTrait, RecordsActivity;
-    protected $table = "mship_qualification";
-    protected $primaryKey = "id";
+    protected $table = 'mship_qualification';
+    protected $primaryKey = 'id';
     protected $dates = ['created_at', 'deleted_at'];
     protected $hidden = ['id'];
 
@@ -55,24 +53,24 @@ class Qualification extends \Eloquent
 
     public function account()
     {
-        return $this->belongsToMany(Account::class, "mship_account_qualification", "qualification_id", "account_id")->withTimestamps();
+        return $this->belongsToMany(Account::class, 'mship_account_qualification', 'qualification_id', 'account_id')->withTimestamps();
     }
 
     public static function parseVatsimATCQualification($network)
     {
         $network = intval($network);
         if ($network < 1) {
-            return null;
+            return;
         } elseif ($network >= 8 and $network <= 10) {
-            $type = "training_atc";
+            $type = 'training_atc';
         } elseif ($network >= 11) {
-            $type = "admin";
+            $type = 'admin';
         } else {
             $type = 'atc';
         }
 
         // Sort out the atc ratings
-        $netQ = Qualification::ofType($type)->networkValue($network)->first();
+        $netQ = self::ofType($type)->networkValue($network)->first();
 
         return $netQ;
     }
@@ -85,7 +83,7 @@ class Qualification extends \Eloquent
         for ($i = 0; $i <= 8; $i++) {
             $pow = pow(2, $i);
             if (($pow & $network) == $pow) {
-                $ro = Qualification::ofType("pilot")->networkValue($pow)->first();
+                $ro = self::ofType('pilot')->networkValue($pow)->first();
                 if ($ro) {
                     $ratingsOutput[] = $ro;
                 }

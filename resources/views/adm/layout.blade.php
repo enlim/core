@@ -3,6 +3,22 @@
     <head>
         <meta charset="UTF-8">
         <title>VATSIM UK :: Administration Panel</title>
+
+        <!--BugSnagScript-->
+        <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
+                data-apikey="b3be4a53f2e319e1fa77bb3c85a3449d"
+                data-releasestage="{{ env('APP_ENV') }}">
+            Bugsnag.notifyReleaseStages = ["staging", "production"];
+
+            @if(Auth::check())
+                    Bugsnag.user = {
+                id: {{ Auth::user()->id }},
+                name: "{{ Auth::user()->name }}",
+                email: "{{ Auth::user()->email }}"
+            };
+            @endif
+        </script>
+
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <!-- bootstrap 3.0.2 -->
         {!! HTML::style('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css') !!}
@@ -29,6 +45,8 @@
         {!! HTML::style('//cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.0.2/css/bootstrap3/bootstrap-switch.min.css') !!}
         <!-- bootstrapSelect -->
         {!! HTML::style('//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.css') !!}
+        <!-- DatetimePicker -->
+        {!! HTML::style(asset("assets/css/datetimepickerxdan/jquery.datetimepicker.min.css")) !!}
         <!-- Theme style -->
         {!! HTML::style('/assets/css/AdminLTE.css') !!}
 
@@ -46,8 +64,12 @@
         @if(!isset($shellOnly) OR !$shellOnly)
             <header class="header">
                 <a href="{{ URL::route("adm.dashboard") }}" class="logo">
-                    <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                    VATSIM UK
+                  <!-- Add the class icon to your logo image or logo icon to add the margining -->
+                  <div class="hidden-md hidden-lg" style="float:left;">
+                    <span data-toggle="offcanvas">
+                      <i class="fa fa-bars" aria-hidden="true"></i>
+                    </span>
+                  </div> VATSIM UK
                 </a>
                 <!-- Header Navbar: style can be found in header.less -->
                 <nav class="navbar navbar-static-top" role="navigation">
@@ -161,6 +183,17 @@
                 singleton : true,
             });
         </script>
+
+        <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-13128412-6', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
         @section('scripts')
         @show

@@ -24,19 +24,18 @@ return [
     ],
 
     'ses' => [
-        'key'    => '',
+        'key' => '',
         'secret' => '',
         'region' => 'us-east-1',
     ],
 
     'stripe' => [
-        'model'  => App\User::class,
-        'key'    => '',
+        'model' => App\User::class,
+        'key' => '',
         'secret' => '',
     ],
 
-    'slack' =>
-        [
-            "token" => env("SLACK_SECRET"),
+    'slack' => [
+            'token' => env('SLACK_SECRET'),
         ],
 ];

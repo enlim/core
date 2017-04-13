@@ -33,6 +33,14 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+            'auth:api',
+            'api.tracking',
+        ],
+        'auth_full_group' => [
+            'auth.user.full',
+            'user.must.read.notifications',
+            'must.have.community.group',
+            'denyifbanned',
         ],
     ];
 
@@ -42,13 +50,17 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth.user'                    => Middleware\AuthUser::class,
-        'auth.user.full'               => Middleware\AuthUserFull::class,
-        'auth.admin'                   => Middleware\AuthAdmin::class,
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.user' => Middleware\AuthUser::class,
+        'auth.user.full' => Middleware\AuthUserFull::class,
+        'auth.admin' => Middleware\AuthAdmin::class,
         'user.must.read.notifications' => Middleware\UserMustReadNotifications::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'must.have.community.group' => \App\Modules\Community\Http\Middleware\MustHaveCommunityGroup::class,
+        'api.tracking' => \App\Http\Middleware\ApiTracking::class,
+        'denyifbanned' => Middleware\DenyIfBanned::class,
     ];
 }

@@ -3,32 +3,31 @@
 namespace App\Models\Mship;
 
 use App\Traits\RecordsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes as SoftDeletingTrait;
 use App\Models\Mship\Role as RoleData;
 
 /**
  * App\Models\Mship\Permission
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $display_name
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mship\Role[] $roles
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission isName($name)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereDisplayName($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereDisplayName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Mship\Permission isName($name)
  * @mixin \Eloquent
  */
 class Permission extends \App\Models\Model
 {
     use RecordsActivity;
 
-    protected $table = "mship_permission";
-    protected $primaryKey = "id";
+    protected $table = 'mship_permission';
+    protected $primaryKey = 'id';
     protected $dates = ['created_at', 'updated_at'];
     protected $fillable = ['name', 'display_name'];
     protected $rules = [
@@ -51,7 +50,7 @@ class Permission extends \App\Models\Model
 
     public function roles()
     {
-        return $this->belongsToMany("\App\Models\Mship\Role", "mship_permission_role")->withTimestamps();
+        return $this->belongsToMany(\App\Models\Mship\Role::class, 'mship_permission_role')->withTimestamps();
     }
 
     public function attachRole(RoleData $role)

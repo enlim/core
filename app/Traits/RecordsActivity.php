@@ -2,10 +2,9 @@
 
 namespace App\Traits;
 
+use Auth;
 use App\Models\Sys\Activity;
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
-use \Auth;
 
 trait RecordsActivity
 {
@@ -27,21 +26,21 @@ trait RecordsActivity
         }
 
         return [
-            "created",
-            "updated",
-            "deleted",
+            'created',
+            'updated',
+            'deleted',
         ];
     }
 
     public function addActivity($event)
     {
         Activity::create([
-            'actor_id'     => (Auth::check() ? Auth::id() : VATUK_ACCOUNT_SYSTEM),
-            'subject_id'   => $this->getKey(),
+            'actor_id' => (Auth::check() ? Auth::id() : 0),
+            'subject_id' => $this->getKey(),
             'subject_type' => get_class($this),
-            'action'       => $event,
+            'action' => $event,
         ]);
     }
 
-    public abstract function __toString();
+    abstract public function __toString();
 }

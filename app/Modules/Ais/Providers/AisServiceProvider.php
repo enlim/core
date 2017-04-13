@@ -3,7 +3,6 @@
 namespace App\Modules\Ais\Providers;
 
 use App;
-use Config;
 use Lang;
 use View;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +32,7 @@ class AisServiceProvider extends ServiceProvider
         // This service provider is a convenient place to register your modules
         // services in the IoC container. If you wish, you may make additional
         // methods or service providers to keep the code more focused and granular.
-        App::register('App\Modules\Ais\Providers\RouteServiceProvider');
+        App::register(\App\Modules\Ais\Providers\RouteServiceProvider::class);
 
         $this->registerNamespaces();
     }
@@ -45,7 +44,7 @@ class AisServiceProvider extends ServiceProvider
      */
     protected function registerNamespaces()
     {
-//		Lang::addNamespace('ais', realpath(__DIR__.'/../Resources/Lang'));
+        //		Lang::addNamespace('ais', realpath(__DIR__.'/../Resources/Lang'));
 
         View::addNamespace('ais', base_path('resources/views/vendor/ais'));
         View::addNamespace('ais', realpath(__DIR__.'/../Resources/Views'));
@@ -59,7 +58,7 @@ class AisServiceProvider extends ServiceProvider
      */
     protected function addMiddleware($middleware)
     {
-        $kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
+        $kernel = $this->app[\Illuminate\Contracts\Http\Kernel::class];
 
         if (is_array($middleware)) {
             foreach ($middleware as $ware) {

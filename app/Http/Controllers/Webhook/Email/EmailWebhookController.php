@@ -2,12 +2,6 @@
 
 namespace App\Http\Controllers\Webhook\Email;
 
-use Session;
-use Response;
-use Redirect;
-use View;
-use Input;
-
 class EmailWebhookController extends \App\Http\Controllers\Webhook\WebhookController
 {
     protected $messageId = null;

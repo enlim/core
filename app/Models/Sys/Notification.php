@@ -2,41 +2,38 @@
 
 namespace App\Models\Sys;
 
-use Illuminate\Database\Eloquent\SoftDeletes as SoftDeletingTrait;
-
 /**
  * App\Models\Sys\Notification
  *
- * @property integer $id
+ * @property int $id
  * @property string $title
  * @property string $content
- * @property integer $status
+ * @property int $status
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $effective_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Mship\Account[] $readBy
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereContent($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereStatus($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereEffectiveAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification published()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification withStatus($status)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification mustAcknowledge()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification important()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification operational()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification general()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification user()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification important()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification mustAcknowledge()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification operational()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification published()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification since($sinceTimestamp)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification user()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereContent($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereEffectiveAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereStatus($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereTitle($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Sys\Notification withStatus($status)
  * @mixin \Eloquent
  */
 class Notification extends \App\Models\Model
 {
-
-    protected $table = "sys_notification";
-    protected $primaryKey = "id";
+    protected $table = 'sys_notification';
+    protected $primaryKey = 'id';
     protected $dates = ['created_at', 'updated_at', 'effective_at'];
     protected $hidden = ['id'];
 
@@ -49,13 +46,13 @@ class Notification extends \App\Models\Model
 
     public function scopePublished($query)
     {
-        return $query->where("status", "!=", self::STATUS_UNPUBLISHED)
-                     ->where("effective_at", "<=", \Carbon\Carbon::now());
+        return $query->where('status', '!=', self::STATUS_UNPUBLISHED)
+                     ->where('effective_at', '<=', \Carbon\Carbon::now());
     }
 
     public function scopeWithStatus($query, $status)
     {
-        return $query->where("status", "=", $status);
+        return $query->where('status', '=', $status);
     }
 
     public function scopeMustAcknowledge($query)
@@ -89,11 +86,11 @@ class Notification extends \App\Models\Model
             $sinceTimestamp = \Carbon\Carbon::parse($sinceTimestamp);
         }
 
-        return $query->where("effective_at", ">=", $sinceTimestamp);
+        return $query->where('effective_at', '>=', $sinceTimestamp);
     }
 
     public function readBy()
     {
-        return $this->belongsToMany("\App\Models\Mship\Account", "sys_notification_read", "notification_id")->with("created_at", "updated_at");
+        return $this->belongsToMany(\App\Models\Mship\Account::class, 'sys_notification_read', 'notification_id')->with('created_at', 'updated_at');
     }
 }

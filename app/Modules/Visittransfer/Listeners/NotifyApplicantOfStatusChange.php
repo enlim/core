@@ -1,9 +1,9 @@
-<?php namespace App\Modules\Visittransfer\Listeners;
+<?php
 
-use App\Modules\Visittransfer\Events\ApplicationStatusChanged;
-use App\Modules\Visittransfer\Jobs\SendApplicantStatusChangeEmail;
-use Illuminate\Queue\InteractsWithQueue;
+namespace App\Modules\Visittransfer\Listeners;
+
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Modules\Visittransfer\Events\ApplicationStatusChanged;
 
 class NotifyApplicantOfStatusChange implements ShouldQueue
 {
@@ -14,8 +14,7 @@ class NotifyApplicantOfStatusChange implements ShouldQueue
 
     public function handle(ApplicationStatusChanged $event)
     {
-        $confirmationEmailJob = new SendApplicantStatusChangeEmail($event->application);
-
-        dispatch($confirmationEmailJob->onQueue("low"));
+        $application = $event->application;
+        $application->account->notify(new ApplicationStatusChanged($application));
     }
 }

@@ -1,15 +1,13 @@
-<?php namespace App\Modules\Visittransfer\Http\Controllers\Site;
+<?php
 
-use App\Http\Controllers\BaseController;
-use App\Models\Mship\Account;
-use App\Models\Sys\Token;
-use App\Modules\Visittransfer\Http\Requests\ReferenceSubmitRequest;
-use App\Modules\Visittransfer\Models\Facility;
-use Auth;
-use Exception;
-use Illuminate\Support\Facades\Gate;
+namespace App\Modules\Visittransfer\Http\Controllers\Site;
+
 use Input;
 use Redirect;
+use Exception;
+use App\Models\Sys\Token;
+use App\Http\Controllers\BaseController;
+use App\Modules\Visittransfer\Http\Requests\ReferenceSubmitRequest;
 
 class Reference extends BaseController
 {
@@ -17,12 +15,12 @@ class Reference extends BaseController
     {
         $reference = $token->related;
 
-        $this->authorize("complete", $reference);
+        $this->authorize('complete', $reference);
 
-        return $this->viewMake("visittransfer::site.reference.complete")
-                    ->with("token", $token)
-                    ->with("reference", $reference)
-                    ->with("application", $reference->application);
+        return $this->viewMake('visittransfer::site.reference.complete')
+                    ->with('token', $token)
+                    ->with('reference', $reference)
+                    ->with('application', $reference->application);
     }
 
     public function postComplete(ReferenceSubmitRequest $request, Token $token)
@@ -30,13 +28,14 @@ class Reference extends BaseController
         $reference = $token->related;
 
         try {
-            $reference->submit(Input::get("reference"));
+            $reference->submit(Input::get('reference'));
             $token->consume();
         } catch (Exception $e) {
             dd($e);
-            return Redirect::route("visiting.reference.complete", [$token->code])->withError($e->getMessage());
+
+            return Redirect::route('visiting.reference.complete', [$token->code])->withError($e->getMessage());
         }
 
-        return Redirect::route("visiting.landing")->withSuccess("You have successfully completed a reference for " . $reference->application->account->name . ".  Thank you.");
+        return Redirect::route('visiting.landing')->withSuccess('You have successfully completed a reference for '.$reference->application->account->name.'.  Thank you.');
     }
 }

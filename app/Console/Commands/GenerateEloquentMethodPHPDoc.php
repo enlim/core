@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tag;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionMethod;
 use stdClass;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionException;
+use Barryvdh\Reflection\DocBlock;
+use Barryvdh\Reflection\DocBlock\Tag;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class GenerateEloquentMethodPHPDoc extends Command
 {
@@ -136,7 +136,7 @@ class GenerateEloquentMethodPHPDoc extends Command
     }
 
     /**
-     * Get the default value of a parameter;
+     * Get the default value of a parameter;.
      *
      * @param ReflectionMethod $method
      * @param Tag\ParamTag $tag
@@ -169,7 +169,7 @@ class GenerateEloquentMethodPHPDoc extends Command
     protected function getReturnDefinition($tag)
     {
         if ($tag->getType() === '$this' || $tag->getType() === 'self') {
-            return '\\' . $this->scraped_class;
+            return '\\'.$this->scraped_class;
         } else {
             return $tag->getType();
         }

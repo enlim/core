@@ -466,3 +466,14 @@ Route::any('frame.php', function () {
 
     return $return;
 });
+
+Route::group([
+    'as' => 'smartcars.',
+    'prefix' => 'smartcars',
+    'namespace' => 'Smartcars',
+    'middleware' => ['auth_full_group'],
+], function () {
+    Route::get('dashboard', function () {
+        return view('smartcars.dashboard');
+    });
+});
